@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-Substitute
 
 {{$NEXT}}
+
+0.002     2013-06-19 22:05:48 Europe/Amsterdam
           Ask PAUSE not to try to index Foo
           Switch to MooseX::Types
 
