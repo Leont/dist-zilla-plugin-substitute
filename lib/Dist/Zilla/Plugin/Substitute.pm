@@ -1,7 +1,8 @@
 package Dist::Zilla::Plugin::Substitute;
 
 use Moose;
-use Moose::Util::TypeConstraints;
+use MooseX::Types -declare => [ 'CodeLiteral' ];
+use MooseX::Types::Moose qw/ArrayRef CodeRef/;
 
 with qw/Dist::Zilla::Role::FileMunger/;
 
@@ -11,12 +12,12 @@ has finders => (
 	default => sub { [ qw/:InstallModules :ExecFiles/ ] },
 );
 
-subtype 'CodeLiteral', as 'CodeRef';
-coerce 'CodeLiteral', from 'ArrayRef', via { eval sprintf "sub { %s } ", join "\n", @{ $_ } };
+subtype CodeLiteral, as CodeRef;
+coerce CodeLiteral, from ArrayRef, via { eval sprintf "sub { %s } ", join "\n", @{ $_ } };
 
 has code => (
 	is       => 'ro',
-	isa      => 'CodeLiteral',
+	isa      => CodeLiteral,
 	coerce   => 1,
 	required => 1,
 );
