@@ -11,12 +11,12 @@ has finders => (
 	default => sub { [ qw/:InstallModules :ExecFiles/ ] },
 );
 
-subtype 'CodeLitteral', as 'CodeRef';
-coerce 'CodeLitteral', from 'ArrayRef', via { eval sprintf "sub { %s } ", join "\n", @{ $_ } };
+subtype 'CodeLiteral', as 'CodeRef';
+coerce 'CodeLiteral', from 'ArrayRef', via { eval sprintf "sub { %s } ", join "\n", @{ $_ } };
 
 has code => (
 	is       => 'ro',
-	isa      => 'CodeLitteral',
+	isa      => 'CodeLiteral',
 	coerce   => 1,
 	required => 1,
 );
