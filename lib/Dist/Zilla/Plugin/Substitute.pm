@@ -50,3 +50,22 @@ sub munge_file {
 1;
 
 # ABSTRACT: Substitutions for files in dzil
+
+=head1 SYNOPSIS
+
+ [Substitute]
+ finder = :ExecFiles
+ code = s/Foo/Bar/g
+
+=head1 DESCRIPTION
+
+This module performs substitutions on files in Dist::Zilla.
+
+=attr code
+
+An array-ref of lines of code. This is converted into a sub that's called for each line, with C<$_> containing that line. Alternatively, it may be a sub-ref if passed from for example a pluginbundle. Mandatory.
+
+=attr finders
+
+The finders to use for the substitutions. Defaults to C<:InstallModules, :ExecFiles>.
+
