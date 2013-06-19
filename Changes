@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-Plugin-Substitute
 
 {{$NEXT}}
+          Ask PAUSE not to try to index Foo
 
 0.001     2013-06-19 20:48:36 Europe/Amsterdam
           Initial release
