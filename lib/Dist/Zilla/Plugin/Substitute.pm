@@ -70,3 +70,4 @@ An array-ref of lines of code. This is converted into a sub that's called for ea
 
 The finders to use for the substitutions. Defaults to C<:InstallModules, :ExecFiles>.
 
+# vi:noet:sts=2:sw=2:ts=2

@@ -24,3 +24,4 @@ unlike $content, qr/Foo/, 'Content contains no Foo';
 
 done_testing;
 
+# vi:noet:sts=2:sw=2:ts=2
