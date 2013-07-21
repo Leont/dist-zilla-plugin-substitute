@@ -9,7 +9,14 @@ use Path::Class;
 
 my $tzil = Builder->from_config(
   { dist_root => 'corpus/' },
-  { },
+  {
+    add_files => {
+      'source/dist.ini' => simple_ini(
+        qw(@Basic PkgVersion),
+        [ Substitute => { code => 's/Foo/Bar/g' } ],
+      ),
+    },
+  }
 );
 
 $tzil->build;
