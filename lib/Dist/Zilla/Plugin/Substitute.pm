@@ -64,7 +64,7 @@ This module performs substitutions on files in Dist::Zilla.
 
 =attr code
 
-An array-ref of lines of code. This is converted into a sub that's called for each line, with C<$_> containing that line. Alternatively, it may be a sub-ref if passed from for example a pluginbundle. Mandatory.
+An arrayref of lines of code. This is converted into a sub that's called for each line, with C<$_> containing that line. Alternatively, it may be a subref if passed from for example a pluginbundle. Mandatory.
 
 =attr finders
 
