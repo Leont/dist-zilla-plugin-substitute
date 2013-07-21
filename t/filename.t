@@ -1,4 +1,3 @@
-#!perl
 use strict;
 use warnings;
 
@@ -13,7 +12,7 @@ my $tzil = Builder->from_config(
     add_files => {
       'source/dist.ini' => simple_ini(
         qw(@Basic PkgVersion),
-        [ Substitute => { code => 's/Foo/Bar/g' } ],
+        [ Substitute => { content_code => 's/Foo/Bar/g', filename_code => 's/Foo.pm/Bar.pm/g' } ],
       ),
     },
   }
@@ -24,7 +23,10 @@ $tzil->build;
 my $dir = dir($tzil->tempdir, 'build');
 
 my $file = $dir->file('lib', 'Foo.pm');
-ok -e $file;
+ok !-e $file, 'original file does not exist';
+$file = $dir->file('lib', 'Bar.pm');
+ok -e $file, 'renamed file exists';
+
 my $content = $file->slurp;
 like $content, qr/Bar/, 'Content contains Bar';
 unlike $content, qr/Foo/, 'Content contains no Foo';
