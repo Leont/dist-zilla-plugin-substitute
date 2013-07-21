@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-Plugin-Substitute
 
 {{$NEXT}}
+          New config field 'filename_code', for renaming a file
 
 0.002     2013-06-19 22:05:48 Europe/Amsterdam
           Ask PAUSE not to try to index Foo

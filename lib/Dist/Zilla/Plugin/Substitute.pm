@@ -21,9 +21,18 @@ has code => (
 	coerce   => 1,
 	required => 1,
 );
+has filename_code => (
+	is       => 'ro',
+	isa      => $codeliteral,
+	coerce   => 1,
+	predicate => '_has_filename_code',
+);
 
 sub mvp_multivalue_args {
-	return qw/finders code/;
+	return qw/finders code filename_code/;
+}
+sub mvp_aliases {
+	return { content_code => 'code' };
 }
 
 sub files {
@@ -45,6 +54,14 @@ sub munge_file {
 	my $code = $self->code;
 	$code->() for @content;
 	$file->content(join "\n", @content);
+
+	if ($self->_has_filename_code) {
+		my $filename = $file->name;
+		my $filename_code = $self->filename_code;
+		$filename_code->() for $filename;
+		$file->name($filename);
+	}
+
 	return;
 }
 
@@ -57,14 +74,20 @@ sub munge_file {
  [Substitute]
  finder = :ExecFiles
  code = s/Foo/Bar/g
+ filename_code = s/foo\.pl/bar.pl/
 
 =head1 DESCRIPTION
 
 This module performs substitutions on files in Dist::Zilla.
 
-=attr code
+=attr code (or content_code)
 
 An arrayref of lines of code. This is converted into a sub that's called for each line, with C<$_> containing that line. Alternatively, it may be a subref if passed from for example a pluginbundle. Mandatory.
+
+=attr filename_code
+
+Like C<content_code> but the resulting sub is called for the filename.
+Optional.
 
 =attr finders
 
