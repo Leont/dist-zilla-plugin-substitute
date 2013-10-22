@@ -4,16 +4,21 @@ use Moose;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw/ArrayRef CodeRef/;
 
+use Carp 'croak';
+
 with qw/Dist::Zilla::Role::FileMunger/;
 
 has finders => (
-	is  => 'ro',
-	isa => 'ArrayRef',
-	default => sub { [ qw/:InstallModules :ExecFiles/ ] },
+	is      => 'ro',
+	isa     => 'ArrayRef',
+	default => sub { [qw/:InstallModules :ExecFiles/] },
 );
 
 my $codeliteral = subtype as CodeRef;
-coerce $codeliteral, from ArrayRef, via { eval sprintf "sub { %s } ", join "\n", @{ $_ } };
+coerce $codeliteral, from ArrayRef, via {
+	my $code = sprintf 'sub { %s } ', join "\n", @{$_};
+	eval $code or croak "Couldn't eval: $@";
+};
 
 has code => (
 	is       => 'ro',
@@ -22,15 +27,16 @@ has code => (
 	required => 1,
 );
 has filename_code => (
-	is       => 'ro',
-	isa      => $codeliteral,
-	coerce   => 1,
+	is        => 'ro',
+	isa       => $codeliteral,
+	coerce    => 1,
 	predicate => '_has_filename_code',
 );
 
 sub mvp_multivalue_args {
 	return qw/finders code filename_code files/;
 }
+
 sub mvp_aliases {
 	return {
 		content_code => 'code',
@@ -39,20 +45,20 @@ sub mvp_aliases {
 }
 
 has files => (
-	is => 'bare',
-	isa => ArrayRef,
+	is      => 'bare',
+	isa     => ArrayRef,
 	builder => '_build_files',
-	traits => ['Array'],
-	lazy  => 1,
+	traits  => ['Array'],
+	lazy    => 1,
 	handles => {
 		files => 'elements',
 	},
 );
 
 sub _build_files {
-	my $self = shift;
+	my $self     = shift;
 	my @filesets = map { @{ $self->zilla->find_files($_) } } @{ $self->finders };
-	my %files = map { $_->name => $_ } @filesets;
+	my %files    = map { $_->name => $_ } @filesets;
 	return [ values %files ];
 }
 
@@ -70,7 +76,7 @@ sub munge_file {
 	$file->content(join "\n", @content);
 
 	if ($self->_has_filename_code) {
-		my $filename = $file->name;
+		my $filename      = $file->name;
 		my $filename_code = $self->filename_code;
 		$filename_code->() for $filename;
 		$file->name($filename);
