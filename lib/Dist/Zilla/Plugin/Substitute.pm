@@ -29,17 +29,31 @@ has filename_code => (
 );
 
 sub mvp_multivalue_args {
-	return qw/finders code filename_code/;
+	return qw/finders code filename_code files/;
 }
 sub mvp_aliases {
-	return { content_code => 'code' };
+	return {
+		content_code => 'code',
+		file         => 'files',
+	};
 }
 
-sub files {
+has files => (
+	is => 'bare',
+	isa => ArrayRef,
+	builder => '_build_files',
+	traits => ['Array'],
+	lazy  => 1,
+	handles => {
+		files => 'elements',
+	},
+);
+
+sub _build_files {
 	my $self = shift;
 	my @filesets = map { @{ $self->zilla->find_files($_) } } @{ $self->finders };
 	my %files = map { $_->name => $_ } @filesets;
-	return values %files;
+	return [ values %files ];
 }
 
 sub munge_files {
@@ -74,7 +88,12 @@ sub munge_file {
  [Substitute]
  finder = :ExecFiles
  code = s/Foo/Bar/g
- filename_code = s/foo\.pl/bar.pl/
+ 
+ ; alternatively
+ [Substitute]
+ file = lib/Buz.pm
+ code = s/Buz/Quz/g
+ filename_code = s/Buz/Quz/
 
 =head1 DESCRIPTION
 
@@ -92,5 +111,9 @@ Optional.
 =attr finders
 
 The finders to use for the substitutions. Defaults to C<:InstallModules, :ExecFiles>.
+
+=attr files
+
+The files to substitute. It defaults to the files in C<finders>. May also be spelled as C<file> in the dist.ini.
 
 # vi:noet:sts=2:sw=2:ts=2
