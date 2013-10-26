@@ -32,7 +32,7 @@ sub mvp_multivalue_args {
 	return qw/finders code filename_code/;
 }
 sub mvp_aliases {
-	return { content_code => 'code' };
+	return { content_code => 'code', finder => 'finders' };
 }
 
 sub files {
@@ -89,8 +89,8 @@ An arrayref of lines of code. This is converted into a sub that's called for eac
 Like C<content_code> but the resulting sub is called for the filename.
 Optional.
 
-=attr finders
+=attr finder
 
-The finders to use for the substitutions. Defaults to C<:InstallModules, :ExecFiles>.
+The finder(s) to use for the substitutions. Can be used more than once; defaults to C<:InstallModules, :ExecFiles>.
 
 # vi:noet:sts=2:sw=2:ts=2
