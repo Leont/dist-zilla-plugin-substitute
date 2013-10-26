@@ -2,6 +2,7 @@ Revision history for Dist-Zilla-Plugin-Substitute
 
 {{$NEXT}}
           Make files an attribute
+          Add finder alias for finders
 
 0.003     2013-07-24 16:34:56 Europe/Amsterdam
           New config field 'filename_code', for renaming a file

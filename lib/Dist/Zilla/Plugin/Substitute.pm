@@ -40,6 +40,7 @@ sub mvp_multivalue_args {
 sub mvp_aliases {
 	return {
 		content_code => 'code',
+		finder       => 'finders',
 		file         => 'files',
 	};
 }
@@ -116,7 +117,7 @@ Optional.
 
 =attr finders
 
-The finders to use for the substitutions. Defaults to C<:InstallModules, :ExecFiles>.
+The finders to use for the substitutions. Defaults to C<:InstallModules, :ExecFiles>. May also be spelled as C<finder> in the dist.ini.
 
 =attr files
 
