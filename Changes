@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-Substitute
 
 {{$NEXT}}
+
+0.004     2013-10-27 02:03:23 Europe/Amsterdam
           Make files an attribute
           Add finder alias for finders
 
