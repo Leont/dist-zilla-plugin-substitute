@@ -9,9 +9,13 @@ use Carp 'croak';
 with qw/Dist::Zilla::Role::FileMunger/;
 
 has finders => (
-	is      => 'ro',
+	is      => 'bare',
 	isa     => 'ArrayRef',
 	default => sub { [qw/:InstallModules :ExecFiles/] },
+	traits  => ['Array'],
+	handles => {
+		finders => 'elements',
+	},
 );
 
 my $codeliteral = subtype as CodeRef;
@@ -58,7 +62,7 @@ has files => (
 
 sub _build_files {
 	my $self     = shift;
-	my @filesets = map { @{ $self->zilla->find_files($_) } } @{ $self->finders };
+	my @filesets = map { @{ $self->zilla->find_files($_) } } $self->finders;
 	my %files    = map { $_->name => $_ } @filesets;
 	return [ values %files ];
 }
