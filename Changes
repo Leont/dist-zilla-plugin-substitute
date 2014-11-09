@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-Substitute
 
 {{$NEXT}}
+
+0.005     2014-11-09 01:44:33+01:00 Europe/Amsterdam
           Convert uses of Path::Class to Path::Tiny
 
 0.004     2013-10-27 02:03:23 Europe/Amsterdam
