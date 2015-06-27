@@ -28,8 +28,7 @@ $file = $dir->child('lib', 'Bar.pm');
 ok -e $file, 'renamed file exists';
 
 my $content = $file->slurp_utf8;
-like $content, qr/Bar/, 'Content contains Bar';
-unlike $content, qr/Foo/, 'Content contains no Foo';
+is($content, "package Bar;\n1;\n", 'file contents were transformed');
 
 done_testing;
 

@@ -75,10 +75,10 @@ sub munge_files {
 
 sub munge_file {
 	my ($self, $file) = @_;
-	my @content = split /\n/, $file->content;
+	my @content = split /^/m, $file->content;
 	my $code = $self->code;
 	$code->() for @content;
-	$file->content(join "\n", @content);
+	$file->content(join '', @content);
 
 	if ($self->_has_filename_code) {
 		my $filename      = $file->name;

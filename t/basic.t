@@ -25,8 +25,8 @@ my $dir = path($tzil->tempdir)->child('build');
 my $file = $dir->child('lib', 'Foo.pm');
 ok -e $file;
 my $content = $file->slurp_utf8;
-like $content, qr/Bar/, 'Content contains Bar';
-unlike $content, qr/Foo/, 'Content contains no Foo';
+
+is($content, "package Bar;\n1;\n", 'file contents were transformed');
 
 done_testing;
 
