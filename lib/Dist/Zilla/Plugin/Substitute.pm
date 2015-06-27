@@ -2,21 +2,14 @@ package Dist::Zilla::Plugin::Substitute;
 
 use Moose;
 use Moose::Util::TypeConstraints;
-use MooseX::Types::Moose qw/ArrayRef CodeRef/;
-
+use MooseX::Types::Moose qw/ArrayRef CodeRef Str/;
+use List::Util 'first';
 use Carp 'croak';
 
-with qw/Dist::Zilla::Role::FileMunger/;
-
-has finders => (
-	is      => 'bare',
-	isa     => 'ArrayRef',
-	default => sub { [qw/:InstallModules :ExecFiles/] },
-	traits  => ['Array'],
-	handles => {
-		finders => 'elements',
-	},
-);
+with 'Dist::Zilla::Role::FileMunger',
+	'Dist::Zilla::Role::FileFinderUser' => {
+		default_finders => [ ':InstallModules', ':ExecFiles' ],
+	};
 
 my $codeliteral = subtype as CodeRef;
 coerce $codeliteral, from ArrayRef, via {
@@ -38,38 +31,38 @@ has filename_code => (
 );
 
 sub mvp_multivalue_args {
-	return qw/finders code filename_code files/;
+	return qw/code filename_code files/;
 }
 
 sub mvp_aliases {
 	return {
 		content_code => 'code',
-		finder       => 'finders',
 		file         => 'files',
 	};
 }
 
 has files => (
-	is      => 'bare',
-	isa     => ArrayRef,
-	builder => '_build_files',
+	isa     => ArrayRef[Str],
 	traits  => ['Array'],
 	lazy    => 1,
+	default => sub { [] },
 	handles => {
 		files => 'elements',
 	},
 );
 
-sub _build_files {
-	my $self     = shift;
-	my @filesets = map { @{ $self->zilla->find_files($_) } } $self->finders;
-	my %files    = map { $_->name => $_ } @filesets;
-	return [ values %files ];
-}
-
 sub munge_files {
 	my $self = shift;
-	$self->munge_file($_) for $self->files;
+
+	if (my @filenames = $self->files) {
+		foreach my $file (@{ $self->zilla->files }) {
+			$self->munge_file($file) if first { $file->name eq $_ } @filenames;
+		}
+	}
+	else {
+		$self->munge_file($_) for @{ $self->found_files };
+	}
+
 	return;
 }
 
