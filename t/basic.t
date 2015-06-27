@@ -8,15 +8,15 @@ use Test::DZil;
 use Path::Tiny;
 
 my $tzil = Builder->from_config(
-  { dist_root => 'corpus/' },
-  {
-    add_files => {
-      'source/dist.ini' => simple_ini(
-        qw(@Basic PkgVersion),
-        [ Substitute => { code => 's/Foo/Bar/g' } ],
-      ),
-    },
-  }
+	{ dist_root => 'corpus/' },
+	{
+		add_files => {
+			'source/dist.ini' => simple_ini(
+				qw(@Basic PkgVersion),
+				[ Substitute => { code => 's/Foo/Bar/g' } ],
+			),
+		},
+	}
 );
 
 $tzil->build;
@@ -31,4 +31,4 @@ unlike $content, qr/Foo/, 'Content contains no Foo';
 
 done_testing;
 
-# vi:noet:sts=2:sw=2:ts=2
+# vim: ts=2 sts=2 sw=2 noet :
