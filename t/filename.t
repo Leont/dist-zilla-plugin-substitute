@@ -2,18 +2,18 @@ use strict;
 use warnings;
 
 use Test::More 0.88;
-
 use Test::DZil;
 use Path::Tiny;
 
 my $tzil = Builder->from_config(
-	{ dist_root => 'corpus/' },
+	{ dist_root => 'does-not-exist' },
 	{
 		add_files => {
-			'source/dist.ini' => simple_ini(
-				qw(@Basic PkgVersion),
+			path(qw(source dist.ini)) => simple_ini(
+				'GatherDir',
 				[ Substitute => { content_code => 's/Foo/Bar/g', filename_code => 's/Foo.pm/Bar.pm/g' } ],
 			),
+			path(qw(source lib Foo.pm)) => "package Foo;\n1;\n",
 		},
 	}
 );
