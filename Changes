@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-Substitute
 
 {{$NEXT}}
+
+0.006     2015-08-14 00:34:13+02:00 Europe/Amsterdam
           - fix mangling of whitespace
           - make "file" option work
 
