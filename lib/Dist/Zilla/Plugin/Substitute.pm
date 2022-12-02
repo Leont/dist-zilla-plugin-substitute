@@ -120,4 +120,4 @@ The finders to use for the substitutions. Defaults to C<:InstallModules, :ExecFi
 
 The files to substitute. It defaults to the files in C<finders>. May also be spelled as C<file> in the dist.ini.
 
-# vim: ts=2 sts=2 sw=2 noet :
+# vim: ts=4 sts=4 sw=4 noet :
