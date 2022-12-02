@@ -6,6 +6,8 @@ use MooseX::Types::Moose qw/ArrayRef CodeRef Str/;
 use List::Util 'first';
 use Carp 'croak';
 
+enum 'Mode', [qw/lines whole/];
+
 with 'Dist::Zilla::Role::FileMunger',
 	'Dist::Zilla::Role::FileFinderUser' => {
 		default_finders => [ ':InstallModules', ':ExecFiles' ],
@@ -41,6 +43,12 @@ sub mvp_aliases {
 	};
 }
 
+has mode => (
+	is => 'ro',
+	isa => 'Mode',
+	default => 'lines',
+);
+
 has files => (
 	isa     => ArrayRef[Str],
 	traits  => ['Array'],
@@ -68,10 +76,19 @@ sub munge_files {
 
 sub munge_file {
 	my ($self, $file) = @_;
-	my @content = split /^/m, $file->content;
+
 	my $code = $self->code;
-	$code->() for @content;
-	$file->content(join '', @content);
+
+	if ($self->mode eq 'lines') {
+		my @content = split /^/m, $file->content;
+		$code->() for @content;
+		$file->content(join '', @content);
+	}
+	else {
+		my $content = $file->content;
+		$code->() for $content;
+		$file->content($content);
+	}
 
 	if ($self->_has_filename_code) {
 		my $filename      = $file->name;
@@ -106,6 +123,10 @@ This module performs substitutions on files in Dist::Zilla.
 =attr code (or content_code)
 
 An arrayref of lines of code. This is converted into a sub that's called for each line, with C<$_> containing that line. Alternatively, it may be a subref if passed from for example a pluginbundle. Mandatory.
+
+=attr mode
+
+Either C<lines>(the default) or C<whole>. This determines if the substitution is done per line or per whole file.
 
 =attr filename_code
 
