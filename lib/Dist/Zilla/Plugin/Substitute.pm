@@ -20,10 +20,10 @@ coerce $codeliteral, from ArrayRef, via {
 };
 
 has code => (
-	is       => 'ro',
-	isa      => $codeliteral,
-	coerce   => 1,
-	required => 1,
+	is        => 'ro',
+	isa       => $codeliteral,
+	coerce    => 1,
+	predicate => '_has_code',
 );
 has filename_code => (
 	is        => 'ro',
@@ -77,17 +77,18 @@ sub munge_files {
 sub munge_file {
 	my ($self, $file) = @_;
 
+	if ($self->_has_code) {
 	my $code = $self->code;
-
-	if ($self->mode eq 'lines') {
-		my @content = split /^/m, $file->content;
-		$code->() for @content;
-		$file->content(join '', @content);
-	}
-	else {
-		my $content = $file->content;
-		$code->() for $content;
-		$file->content($content);
+		if ($self->mode eq 'lines') {
+			my @content = split /^/m, $file->content;
+			$code->() for @content;
+			$file->content(join '', @content);
+		}
+		else {
+			my $content = $file->content;
+			$code->() for $content;
+			$file->content($content);
+		}
 	}
 
 	if ($self->_has_filename_code) {
@@ -122,7 +123,7 @@ This module performs substitutions on files in Dist::Zilla.
 
 =attr code (or content_code)
 
-An arrayref of lines of code. This is converted into a sub that's called for each line, with C<$_> containing that line. Alternatively, it may be a subref if passed from for example a pluginbundle. Mandatory.
+An arrayref of lines of code. This is converted into a sub that's called for each line, with C<$_> containing that line. Alternatively, it may be a subref if passed from for example a pluginbundle.
 
 =attr mode
 
