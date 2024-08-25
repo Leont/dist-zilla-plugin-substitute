@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-Substitute
 
 {{$NEXT}}
+
+0.008     2024-08-25 11:54:01+02:00 Europe/Brussels
           - Make code argument optional
           - Join lines with semicolons
 
