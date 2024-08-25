@@ -15,7 +15,7 @@ with 'Dist::Zilla::Role::FileMunger',
 
 my $codeliteral = subtype as CodeRef;
 coerce $codeliteral, from ArrayRef, via {
-	my $code = sprintf 'sub { %s }', join "\n", @{$_};
+	my $code = sprintf "sub { %s }", join ";\n", @{$_};
 	eval $code or croak "Couldn't eval: $@";
 };
 
